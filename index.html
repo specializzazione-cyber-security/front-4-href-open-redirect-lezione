@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Href Open redirect</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+</head>
+
+<body class="m-5">
+  <h1>string match</h1>
+  <div class="card">
+    <div class="card-title h1">Chat</div>
+    <div class="card-body" style="height: 300px; overflow-y: scroll;">
+      <ul id="chat" class="list-group">
+
+      </ul>
+    </div>
+  </div>
+  <label for="message" class="form-label">Message</label>
+  <input type="text" class="form-control" id="message">
+  <button type="button" class="btn btn-primary mt-1" id="send">Send</button>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+    crossorigin="anonymous"></script>
+  <script>
+    const chat = document.querySelector("#chat");
+    const message = document.querySelector("#message");
+    const button = document.querySelector("#send");
+    button.addEventListener('click', () => {
+      const cleanedMessage = message.value.trim();
+      if (cleanedMessage) {
+        const listItem = document.createElement('li');
+        listItem.classList.add('list-group-item');
+        listItem.innerHTML = `${cleanedMessage}`;
+        listItem.addEventListener('click', (event) => {
+          if (event.target.nodeName === 'A') {
+            // UNSECURE
+            // TRY <a href="https://aulab.it">clicca</a>
+            // TRY <a href="https://aulab.it?uri=http://127.0.0.1:5500">clicca</a>
+            if(event.target.href.includes(location.origin)){
+              location.replace(event.target.href); // il link è interno
+            } else {
+              alert("External link")
+            }
+
+            // SECURE
+            // if (location.origin == new URL(event.target.href)) {
+            //   location.replace(event.target.href);
+            // } else {
+            //   alert("External link")
+            // }
+          }
+          event.preventDefault();
+        })
+        chat.appendChild(listItem);
+        message.value = "";
+      }
+    })
+  </script>
+</body>
+
+</html>
